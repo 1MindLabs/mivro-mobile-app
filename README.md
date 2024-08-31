@@ -1,164 +1,105 @@
-<p align="center">
-  <img src="browser-extension/assets/oth-icons/logo-transparent.png" alt="Project Logo">
-</p>
+# Mivro Flutter App
 
-## Project Description
+This is the cross-platform mobile application for the Mivro project, built with the Flutter framework. It enables users to scan barcodes, search products, track meals, chat with a recipe chatbot, and explore a marketplace for healthier alternatives.
 
-The app supports barcode scanning for foods, drinks, cosmetics, medicines, and pet foods. It provides detailed ingredient information, categorizes nutrients into positive and negative (either generally or based on user-specific health data), identifies associated health risks, and suggests alternatives using an AI recommendation engine.
+**Maintained By**: [Rishi Chirchi](https://github.com/rishichirchi)
 
-### Key Features
+## Repository Structure
 
-- **Search Engine**: Easily find products without barcode scanning, with upcoming support for image and live product recognition.
-- **Meal Tracker**: Monitor your daily nutritional intake by scanning product barcodes, allowing you to easily track and manage your meals.
-- **Marketplace**: Discover and purchase for healthier alternatives from our trusted partners.
-- **Browser Extension**: Integrate app features seamlessly into your online shopping experience.
+### Configuration and Metadata
 
-Additionally, the app includes a Recipe Chatbot for personalized recipe recommendations and an Account Activity feature to track your scan history, searches, and payments.
+- **`.metadata`**: Contains metadata for the Flutter project.
+- **`analysis_options.yaml`**: Defines the linting rules and analysis options for the Dart code.
+- **`pubspec.lock`**: Locks the versions of dependencies used in the project.
+- **`pubspec.yaml`**: Specifies the app’s dependencies, assets, and other configurations.
 
-## System Architecture
+### Platform-Specific Directories
 
-<p align="center">
-  <img src="browser-extension/assets/oth-icons/architecture.png" alt="System Architecture">
-</p>
+- **`android/`**: Contains files and configurations for building the Flutter app on Android.
+- **`ios/`**: Contains files and configurations for building the Flutter app on iOS.
+- **`linux/`**: Contains files and configurations for building the Flutter app on Linux.
+- **`macos/`**: Contains files and configurations for building the Flutter app on macOS.
+- **`web/`**: Contains files and configurations for building the Flutter app for the web.
+- **`windows/`**: Contains files and configurations for building the Flutter app on Windows.
 
----
+### Assets
 
-1. **Barcode Scan**: Utilizes the `zxing_flutter` library to capture barcode input from the user via the Flutter app. The scanned barcode is then sent to the Django server for further processing.
+- **`assets/`**: Contains animations for the scanner and icons/logos used in the user interface.
 
-2. **Text Search**: Accepts text input from the user through the Flutter app for product lookup. This input is forwarded to the Django server to query the Firestore database for relevant product information.
+### Main Application Code (`lib/`)
 
-3. **Django Server**: Serves as the central backend server responsible for user authentication, data cleaning, integration with the Gemini API, and interaction with Google Firebase services.
+- **`providers/`**:
 
-4. **OpenFoodFacts API**: Fetches raw, detailed information about products based on barcode or text search inputs. This API provides comprehensive ingredient and nutritional data, including metadata such as name, brand, and more.
+  - **`chat_history_provider.dart`**: Manages loading and maintaining the chat history.
+  - **`chat_provider.dart`**: Handles API requests to the Python server for chatbot functionalities.
 
-5. **Gemini API**: Analyzes data from the OpenFoodFacts API, sorting nutrients into positive and negative categories, flagging potential health risks, and offering product recommendations.
+- **`screens/`**:
 
-6. **Firestore Database**: Stores processed product information, facilitating quick lookups for both the browser extension and the Flutter app. If no barcode is detected, it searches the database for relevant details.
+  - **`home_page.dart`**: The main landing page of the app.
+  - **`scanner_screen.dart`**: Manages the UI for the barcode scanner feature.
+  - **`marketplace_screen.dart`**: Allows users to browse and purchase healthier product alternatives.
+  - **`chat_screen.dart`**: Contains the interface for chatting with the recipe chatbot.
+  - **`tracker_screen.dart`**: Handles the meal tracker functionality, allowing users to monitor their daily nutritional intake.
+  - **`profile_screen.dart`**: Manages user profile details and settings.
 
-7. **Flutter App**: Cross-platform mobile application enabling users to scan barcodes for offline shopping, access features such as a recipe chatbot, meal tracker for monitoring nutritional intake, and a marketplace for healthy products.
-
-8. **Browser Extension**: Extends the features of the Flutter app to the user's online shopping experience, allowing product lookups using our search engine directly within the browser.
+- **`main.dart`**: The entry point for the Flutter application, setting up the app structure and initial routes.
 
 ## Getting Started
 
-Follow these steps to set up and run the Mivro software on your local machine, or you can watch the [demo video](https://youtube.com/watch?v=ToXUq-NSkUg).
+Follow these steps to set up and run the Mivro Flutter App on your local machine, or you can watch the [demo video](https://youtube.com/watch?v=ToXUq-NSkUg).
 
 ### Prerequisites
 
-- [Python >= 3.11.9](https://python.org/ftp/python/3.11.9/python-3.11.9-amd64.exe)
-- [Node.js >= 20.14.0](https://nodejs.org/dist/v20.14.0/node-v20.14.0-x64.msi)
-- [Flutter SDK >= 3.22.3](https://storage.googleapis.com/flutter_infra_release/releases/stable/windows/flutter_windows_3.22.3-stable.zip)
+- [Flutter SDK >= 3.22.3](https://storage.googleapis.com/flutter_infra_release/releases/stable/windows/flutter_windows_3.22.3-stable.zip).
+- [Android Studio](https://developer.android.com/studio) or [Xcode](https://developer.apple.com/xcode) for iOS development.
 
 ### Installation
 
-#### Python Server
+1. **Fork the Repository**:
 
-1. **Fork the repository**:
-   - Go to the [Mivro repository on GitHub](https://github.com/SpaceTesla/Mivro) and click the "Fork" button at the top right corner to create a copy under your GitHub account.
+   - Go to the [Mivro Flutter App repository](https://github.com/Mivro/flutter-app) and click "Fork" to create a copy under your GitHub account.
 
-2. **Clone the repository to your local machine**:
-    ```shell
-    git clone https://github.com/<your-username>/Mivro.git
-    ```
+2. **Clone the Repository**:
 
-3. **Navigate to the project directory**:
-    ```shell
-    cd Mivro
-    ```
+   ```bash
+   git clone https://github.com/<your-username>/flutter-app.git
+   ```
 
-4. **Create a virtual environment (optional but recommended)**:
-    ```shell
-    python -m venv .venv
-    ```
+3. **Navigate to the Project Directory**:
 
-5. **Activate the virtual environment**:
-    - **Windows**:
-        ```shell
-        .venv\Scripts\activate
-        ```
-    - **macOS and Linux**:
-        ```shell
-        source .venv/bin/activate
-        ```
+   ```bash
+   cd flutter-app
+   ```
 
-6. **Install the project dependencies**:
-    ```shell
-    pip install -r requirements.txt
-    ```
+4. **Install Flutter Dependencies**:
+   ```bash
+   flutter pub get
+   ```
 
-7. **Set up the configuration files**:
-   - Create a `.env` file in the project root directory with the following template:
-     ```ini
-     FLASK_SECRET_KEY=your_secret_key
-     GEMINI_API_KEY=your_gemini_api_key
-     ```
+## Usage
 
-   - Create a `firebase-adminsdk.json` file in the project root directory with the following template:
-     ```json
-     {
-       "type": "service_account",
-       "project_id": "your_project_id",
-       "private_key_id": "your_private_key_id",
-       "private_key": "-----BEGIN PRIVATE KEY-----\nYOUR_PRIVATE_KEY\n-----END PRIVATE KEY-----\n",
-       "client_email": "your_client_email",
-       "client_id": "your_client_id",
-       "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-       "token_uri": "https://oauth2.googleapis.com/token",
-       "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-       "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/your_client_email",
-       "universe_domain": "googleapis.com"
-     }
-     ```
+1. **Prepare Your Device**:
 
-8. **Run the Python application**:
-    ```shell
-    python python-app/app.py
-    ```
+   - Ensure an Android or iOS device is connected with debugging enabled, or start an Android emulator or iOS simulator.
 
-#### Browser Extension
+2. **Run the Flutter Application**:
+   ```bash
+   flutter run
+   ```
 
-1. **Set up the Chrome extension**:
-    - Open Chrome and go to `chrome://extensions`.
-    - Enable "Developer mode" (top right corner).
-    - Click "Load unpacked" (top left corner).
-    - Select the `browser-extension` folder in the Mivro repository.
+## Documentation
 
-2. **Using the Browser Extension**:
-    - Navigate to any of the following supported websites:
-      - https://www.bigbasket.com
-      - https://www.blinkit.com
-      - https://www.swiggy.com
-      - https://www.zeptonow.com
-      - https://www.jiomart.com
-      - https://www.amazon.com
-      - https://www.flipkart.com
+For detailed documentation, please visit the [Documentation Repository](https://github.com/Mivro/documentation).
 
-    - Select and open any product. The browser extension will appear on the right side of the screen. Click on the extension icon to access detailed information.
+## Contributing
 
-#### Flutter Application
-
-1. **Navigate to the flutter-app directory**:
-    ```shell
-    cd flutter-app
-    ```
-
-2. **Get Flutter dependencies**:
-    ```shell
-    flutter pub get
-    ```
-
-3. **Prepare your device**:
-    - Ensure an Android device is connected and debugging is enabled, or start an Android emulator.
-
-4. **Run the Flutter app**:
-    ```shell
-    flutter run
-    ```
+We welcome contributions! Please follow the guidelines in our [Contributing Guide](https://github.com/Mivro/documentation/blob/main/CONTRIBUTING.md) to get started.
 
 ## License
 
-This project is licensed under the [MIT License](https://github.com/SpaceTesla/Mivro/blob/main/LICENSE).
+This project is licensed under the [MIT License](https://github.com/Mivro/documentation/blob/main/LICENSE).
 
-## Authors
+## Acknowledgments
 
-[Areeb Ahmed](https://github.com/areebahmeddd) - [Shivansh Karan](https://github.com/SpaceTesla) - [Shashwat Kumar](https://github.com/shashwat6204) - [Rishi Chirchi](https://github.com/rishichirchi)
+- [Open Food Facts](https://world.openfoodfacts.org) for providing access to a comprehensive food product database.
+- [All Contributors](https://github.com/Mivro/flutter-app/graphs/contributors) for their valuable contributions to the development and improvement of this project.
