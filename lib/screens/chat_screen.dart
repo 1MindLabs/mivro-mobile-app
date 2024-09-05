@@ -32,7 +32,7 @@ class _ChatbotScreenState extends ConsumerState<ChatbotScreen> {
       setState(() {
         ref
             .read(chatHistoryProvider.notifier)
-            .addMessage(Message(text: userPrompt, isUser: true));
+            .addMessage(Message(text: userPrompt, isUser: true)); // you can change the isUser to true if you want to show the user message
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _scrollController.animateTo(
             _scrollController.position.maxScrollExtent,
