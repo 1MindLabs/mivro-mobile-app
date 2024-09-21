@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mivro/models/message.dart';
+import 'package:mivro/presentation/chat/model/message.dart';
 
 class ChatHistoryNotifier extends StateNotifier<List<Message>> {
   ChatHistoryNotifier()

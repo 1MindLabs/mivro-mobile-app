@@ -1,8 +1,8 @@
 import 'package:lottie/lottie.dart';
 import 'package:mivro/utils/hexcolor.dart';
-import 'package:mivro/widgets/barcode/scanner_button_widgets.dart';
-import 'package:mivro/widgets/barcode/scanner_error_widget.dart';
-import 'package:mivro/widgets/search_bar.dart';
+import 'package:mivro/presentation/home/view/widgets/scanner_button_widgets.dart';
+import 'package:mivro/presentation/home/view/widgets/scanner_error_widget.dart';
+import 'package:mivro/presentation/home/view/widgets/search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
@@ -67,10 +67,11 @@ class _BarcodeScannerListViewState extends State<BarcodeScannerListView> {
                               // ),
                               const Spacer(),
                               IconButton(
-                                icon: const Icon(Icons.ios_share_rounded),
+                                icon: const Icon(Icons.flag_outlined),
                                 iconSize: 20,
                                 onPressed: () {},
                               ),
+
                               StatefulBuilder(
                                 builder: (BuildContext context,
                                     StateSetter setState) {
@@ -83,6 +84,8 @@ class _BarcodeScannerListViewState extends State<BarcodeScannerListView> {
                                           favorite.icon == Icons.favorite
                                               ? Icons.favorite_border
                                               : Icons.favorite,
+                                          color: favorite.icon == Icons.favorite?
+                                              Colors.black : Colors.red,
                                         );
                                       });
                                     },
@@ -90,7 +93,7 @@ class _BarcodeScannerListViewState extends State<BarcodeScannerListView> {
                                 },
                               ),
                               IconButton(
-                                icon: const Icon(Icons.flag_outlined),
+                                icon: const Icon(Icons.ios_share_rounded),
                                 iconSize: 20,
                                 onPressed: () {},
                               ),
@@ -614,13 +617,27 @@ class _BarcodeScannerListViewState extends State<BarcodeScannerListView> {
           child: SearchBarWIdget(),
         ),
         Positioned(
-          top: 200,
+          top: 150,
           right: 10,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ToggleFlashlightButton(controller: controller!),
+              const Text(
+                'Flashlight',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                ),
+              ),
               AnalyzeImageFromGalleryButton(controller: controller!),
+              const Text(
+                'Gallery',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                ),
+              ),
             ],
           ),
         ),
