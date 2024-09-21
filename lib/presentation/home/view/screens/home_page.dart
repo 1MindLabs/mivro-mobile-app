@@ -1,8 +1,8 @@
-import 'package:mivro/screens/barcode_scanner_screen.dart';
-import 'package:mivro/screens/chat_screen.dart';
-import 'package:mivro/screens/marketplace_screen.dart';
-import 'package:mivro/screens/tracker_screen.dart';
-import 'package:mivro/screens/profile_screen.dart';
+import 'package:mivro/presentation/home/view/screens/barcode_scanner_screen.dart';
+import 'package:mivro/presentation/chat/view/screen/chat_screen.dart';
+import 'package:mivro/presentation/marketplace/view/screen/marketplace_screen.dart';
+import 'package:mivro/presentation/tracker/view/screen/tracker_screen.dart';
+import 'package:mivro/presentation/profile/view/screen/profile_screen.dart';
 import 'package:mivro/utils/hexcolor.dart';
 import 'package:flutter/material.dart';
 

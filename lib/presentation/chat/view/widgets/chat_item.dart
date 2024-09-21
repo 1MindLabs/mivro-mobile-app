@@ -1,4 +1,4 @@
-import 'package:mivro/models/message.dart';
+import 'package:mivro/presentation/chat/model/message.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mivro/utils/hexcolor.dart';
