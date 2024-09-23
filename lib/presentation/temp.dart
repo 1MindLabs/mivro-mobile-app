@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class TempPage extends StatelessWidget {
+  const TempPage({super.key});
+
   void _showModalBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -10,7 +12,7 @@ class TempPage extends StatelessWidget {
           expand: false,
           builder: (context, scrollController) {
             return Container(
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               color: Colors.white,
               child: SingleChildScrollView(
                 controller: scrollController,
@@ -24,8 +26,8 @@ class TempPage extends StatelessWidget {
                           width: 60,
                           height: 60,
                         ),
-                        SizedBox(width: 16),
-                        Column(
+                        const SizedBox(width: 16),
+                        const Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
@@ -50,8 +52,8 @@ class TempPage extends StatelessWidget {
                         )
                       ],
                     ),
-                    SizedBox(height: 20),
-                    Text(
+                    const SizedBox(height: 20),
+                    const Text(
                       'Negatives',
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
@@ -60,8 +62,8 @@ class TempPage extends StatelessWidget {
                     _buildNutritionRow('Energy', '389.00 kcal', 'Energy bomb!', Colors.red),
                     _buildNutritionRow('Saturated Fat', '8.20 g', 'Saturated fat alert!', Colors.red),
                     _buildNutritionRow('Salt', '1.03 g', 'Salt overload!', Colors.red),
-                    SizedBox(height: 20),
-                    Text(
+                    const SizedBox(height: 20),
+                    const Text(
                       'Positives',
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
@@ -86,8 +88,8 @@ class TempPage extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: TextStyle(fontSize: 16)),
-              Text(description, style: TextStyle(fontSize: 12, color: Colors.grey)),
+              Text(title, style: const TextStyle(fontSize: 16)),
+              Text(description, style: const TextStyle(fontSize: 12, color: Colors.grey)),
             ],
           ),
           Row(
@@ -104,11 +106,11 @@ class TempPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Modal Bottom Sheet Example')),
+      appBar: AppBar(title: const Text('Modal Bottom Sheet Example')),
       body: Center(
         child: ElevatedButton(
           onPressed: () => _showModalBottomSheet(context),
-          child: Text('Show Modal Bottom Sheet'),
+          child: const Text('Show Modal Bottom Sheet'),
         ),
       ),
     );

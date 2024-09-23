@@ -6,27 +6,27 @@ void main() {
   group('myColorFromHex', () {
     test('converts 6-digit hex to Color', () {
       final color = myColorFromHex('FFFFFF');
-      expect(color, Color(0xFFFFFFFF));
+      expect(color, const Color(0xFFFFFFFF));
     });
 
     test('converts 6-digit hex with # to Color', () {
       final color = myColorFromHex('#FFFFFF');
-      expect(color, Color(0xFFFFFFFF));
+      expect(color, const Color(0xFFFFFFFF));
     });
 
     test('converts 8-digit hex to Color', () {
       final color = myColorFromHex('FF0000FF');
-      expect(color, Color(0xFF0000FF));
+      expect(color, const Color(0xFF0000FF));
     });
 
     test('converts 8-digit hex with # to Color', () {
       final color = myColorFromHex('#FF0000FF');
-      expect(color, Color(0xFF0000FF));
+      expect(color, const Color(0xFF0000FF));
     });
 
     test('handles lowercase hex', () {
       final color = myColorFromHex('ff0000');
-      expect(color, Color(0xFFFF0000));
+      expect(color, const Color(0xFFFF0000));
     });
 
     test('handles invalid hex gracefully', () {

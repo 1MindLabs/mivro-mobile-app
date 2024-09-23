@@ -25,8 +25,8 @@ if (flutterVersionName == null) {
 
 android {
     namespace = "com.example.mivro"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    compileSdk = 34
+    ndkVersion = 21
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8

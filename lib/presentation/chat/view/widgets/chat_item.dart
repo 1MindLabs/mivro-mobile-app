@@ -19,9 +19,9 @@ class ChatItem extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  CircleAvatar(
+                  const CircleAvatar(
                     radius: 20,
-                    backgroundImage: const AssetImage('assets/icons/user.png'),
+                    backgroundImage: AssetImage('assets/icons/user.png'),
                   ),
                   const SizedBox(height: 5),
                   Container(
@@ -144,10 +144,10 @@ class ChatItem extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CircleAvatar(
+                      const CircleAvatar(
                         radius: 20,
                         backgroundImage:
-                            const AssetImage('assets/icons/bot.png'),
+                            AssetImage('assets/icons/bot.png'),
                       ),
                       const SizedBox(height: 5),
                       Container(
