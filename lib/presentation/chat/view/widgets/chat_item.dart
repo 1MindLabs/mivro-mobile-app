@@ -42,6 +42,8 @@ class ChatItem extends ConsumerWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           // Align(
                           //   alignment: Alignment.centerRight,
@@ -59,6 +61,9 @@ class ChatItem extends ConsumerWidget {
                                   fontSize: 16, color: Colors.black),
                             ),
                           ),
+
+                          if(message.image != null)
+                            Image.file(message.image!, width: 100, height: 100),  
                         ],
                       ),
                     ),
@@ -70,8 +75,8 @@ class ChatItem extends ConsumerWidget {
               ? Align(
                   alignment: Alignment.centerLeft,
                   child: Container(
-                    decoration: BoxDecoration(
-                      color: myColorFromHex('#F8EDE3'),
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
                       borderRadius: const BorderRadius.only(
                         topRight: Radius.circular(20),
                         bottomLeft: Radius.circular(20),
