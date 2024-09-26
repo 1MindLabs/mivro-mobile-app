@@ -61,10 +61,6 @@ class ToggleFlashlightButton extends StatelessWidget {
     return ValueListenableBuilder(
       valueListenable: controller.torchState,
       builder: (context, state, child) {
-        if (controller.torchState.value == null) {
-          return const SizedBox.shrink();
-        }
-
         switch (controller.torchState.value) {
           case TorchState.off:
             return IconButton(

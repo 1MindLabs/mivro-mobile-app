@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mivro/models/message.dart';
 import 'package:mivro/providers/chat_provider.dart';
 import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 
 @GenerateMocks([],

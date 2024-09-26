@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:mivro/presentation/chat/model/message.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,19 +16,23 @@ class ChatsNotifier extends StateNotifier<List<dynamic>> {
       log('in get response');
       _isLoading = true;
       state = [...state];
-      String url = 'http://192.168.195.94:5000/api/v1/ai/savora';
+      String url = 'http://192.168.193.94:5000/api/v1/ai/savora';
 
       Map<String, String> body = {
-        "email": "areebahmed0709@gmail.com",
+        "type": "text",
         "message": prompt,
+      };
+
+      const header = <String, String>{
+        'Mivro-Email': 'admin@mivro.org',
+        'Mivro-Password': 'admin@123',
+        'Content-Type': 'application/json',
       };
 
       final response = await http.post(
         Uri.parse(url),
         body: json.encode(body),
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: header
       );
 
       log('got response');
@@ -46,6 +51,51 @@ class ChatsNotifier extends StateNotifier<List<dynamic>> {
         return chat;
       } else {
         log(response.body);
+        return null;
+      }
+    } catch (e) {
+      log(e.toString());
+      return null;
+    }
+  }
+
+  Future<Message?> getResponseHavingImage(String prompt, File file) async {
+    try {
+      log('in get response with image');
+      _isLoading = true;
+      state = [...state];
+      String url = 'http://192.168.193.94:5000/api/v1/ai/savora';
+
+      const header = <String, String>{
+        'Mivro-Email': 'admin@mivro.org',
+        'Mivro-Password': 'admin@123',
+        'Content-Type': 'multipart/form-data',
+      };
+
+      var request = http.MultipartRequest('POST', Uri.parse(url))
+        ..headers.addAll(header)
+        ..fields['message'] = prompt
+        ..fields['type'] = 'media'
+        ..files.add(await http.MultipartFile.fromPath('media', file.path));
+
+      var response = await request.send();
+      log('got response');
+
+      if (response.statusCode == 200) {
+        var data = json.decode(await response.stream.bytesToString());
+        final result = data['response'];
+        log(result);
+
+        final chat = Message(text: result, isUser: false);
+
+        state = [...state, chat];
+        _isLoading = false;
+        state = [...state];
+        return chat;
+      } else {
+        var data = json.decode(await response.stream.bytesToString());
+        final result = data['response'];
+        log(result);
         return null;
       }
     } catch (e) {
