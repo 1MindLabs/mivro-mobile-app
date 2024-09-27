@@ -17,14 +17,6 @@ class _OverviewScreenState extends State<OverviewScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/logo/mivro.png'),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
           Center(
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
@@ -34,7 +26,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
                   0.2,
                 ), // Optional: for better visibility of the blur effect
                 child: const Text(
-                  'Feature under development',
+                  'Feature Under Development',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 24,

@@ -9,7 +9,7 @@ class ProductDetailsNotifier extends StateNotifier<Map<String, dynamic>> {
 
   Future<Map<String, dynamic>> getProductDetails(String barcode) async {
     try {
-      const String url = 'http://192.168.193.94:5000/api/v1/search/barcode';
+      const String url = 'http://10.1.6.186:5000/api/v1/search/barcode';
 
       const header = <String, String>{
         'Mivro-Email': 'admin@mivro.org',
@@ -18,7 +18,7 @@ class ProductDetailsNotifier extends StateNotifier<Map<String, dynamic>> {
       };
 
       final body = <String, String>{
-        'product_barcode': '5000108022152',
+        'product_barcode': barcode,
       };
 
       final response = await http.post(Uri.parse(url),
@@ -28,7 +28,6 @@ class ProductDetailsNotifier extends StateNotifier<Map<String, dynamic>> {
         final Map<String, dynamic> data =
             json.decode(response.body) as Map<String, dynamic>;
         log(data.toString());
-        // clearProductDetails();
         state = data;
 
         return data;

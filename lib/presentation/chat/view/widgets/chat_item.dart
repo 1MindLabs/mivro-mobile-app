@@ -45,14 +45,8 @@ class ChatItem extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          // Align(
-                          //   alignment: Alignment.centerRight,
-                          //   child: Text(
-                          //     'You',
-                          //     style: TextStyle(
-                          //         color: myColorFromHex('#0D7377'), fontSize: 16),
-                          //   ),
-                          // ),
+                          if (message.image != null)
+                            Image.file(message.image!, width: 100, height: 100),
                           Align(
                             alignment: Alignment.centerRight,
                             child: Text(
@@ -61,9 +55,6 @@ class ChatItem extends ConsumerWidget {
                                   fontSize: 16, color: Colors.black),
                             ),
                           ),
-
-                          if(message.image != null)
-                            Image.file(message.image!, width: 100, height: 100),  
                         ],
                       ),
                     ),
@@ -82,8 +73,6 @@ class ChatItem extends ConsumerWidget {
                         bottomLeft: Radius.circular(20),
                         bottomRight: Radius.circular(20),
                       ),
-                      // border:
-                      //     Border.all(color: myColorFromHex('#0D7377'), width: 2),
                     ),
                     alignment: Alignment.topLeft,
                     constraints: BoxConstraints(
@@ -93,44 +82,6 @@ class ChatItem extends ConsumerWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
                         children: [
-                          // const Align(
-                          //   alignment: Alignment.centerLeft,
-                          //   child: Text.rich(
-                          //     TextSpan(
-                          //       children: [
-                          //         TextSpan(
-                          //           text: 'm',
-                          //           style: TextStyle(
-                          //               color: Color(0xFFE83A4F)), // Red color
-                          //         ),
-                          //         TextSpan(
-                          //           text: 'i',
-                          //           style: TextStyle(
-                          //               color: Color(0xFFF79C26)), // Orange color
-                          //         ),
-                          //         TextSpan(
-                          //           text: 'v',
-                          //           style: TextStyle(
-                          //               color: Color(0xFF81C341)), // Green color
-                          //         ),
-                          //         TextSpan(
-                          //           text: 'r',
-                          //           style: TextStyle(
-                          //               color: Color(0xFF4FAFDC)), // Blue color
-                          //         ),
-                          //         TextSpan(
-                          //           text: 'o',
-                          //           style: TextStyle(
-                          //               color: Color(0xFF4FAFDC)), // Blue color
-                          //         ),
-                          //       ],
-                          //     ),
-                          //     style: TextStyle(
-                          //       fontSize: 16,
-                          //       fontWeight: FontWeight.bold,
-                          //     ),
-                          //   ),
-                          // ),
                           Align(
                             alignment: Alignment.center,
                             child: Text(
@@ -151,8 +102,7 @@ class ChatItem extends ConsumerWidget {
                     children: [
                       const CircleAvatar(
                         radius: 20,
-                        backgroundImage:
-                            AssetImage('assets/icons/bot.png'),
+                        backgroundImage: AssetImage('assets/icons/bot.png'),
                       ),
                       const SizedBox(height: 5),
                       Container(
@@ -174,44 +124,6 @@ class ChatItem extends ConsumerWidget {
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
                             children: [
-                              // const Align(
-                              //   alignment: Alignment.centerLeft,
-                              //   child: Text.rich(
-                              //     TextSpan(
-                              //       children: [
-                              //         TextSpan(
-                              //           text: 'm',
-                              //           style: TextStyle(
-                              //               color: Color(0xFFE83A4F)), // Red color
-                              //         ),
-                              //         TextSpan(
-                              //           text: 'i',
-                              //           style: TextStyle(
-                              //               color: Color(0xFFF79C26)), // Orange color
-                              //         ),
-                              //         TextSpan(
-                              //           text: 'v',
-                              //           style: TextStyle(
-                              //               color: Color(0xFF81C341)), // Green color
-                              //         ),
-                              //         TextSpan(
-                              //           text: 'r',
-                              //           style: TextStyle(
-                              //               color: Color(0xFF4FAFDC)), // Blue color
-                              //         ),
-                              //         TextSpan(
-                              //           text: 'o',
-                              //           style: TextStyle(
-                              //               color: Color(0xFF4FAFDC)), // Blue color
-                              //         ),
-                              //       ],
-                              //     ),
-                              //     style: TextStyle(
-                              //       fontSize: 16,
-                              //       fontWeight: FontWeight.bold,
-                              //     ),
-                              //   ),
-                              // ),
                               Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
