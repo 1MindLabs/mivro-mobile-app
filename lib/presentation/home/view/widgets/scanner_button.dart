@@ -5,23 +5,20 @@ class ScannerButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {
-        // Add your onPressed code here!
-      },
+      onPressed: () {},
       style: ElevatedButton.styleFrom(
         shape: const CircleBorder(),
         padding: const EdgeInsets.all(20),
         elevation: 5,
-        backgroundColor: Colors.white, // Background color
+        backgroundColor: Colors.white,
       ),
       child: Container(
         width: 50,
         height: 50,
-        decoration:const BoxDecoration(
+        decoration: const BoxDecoration(
           shape: BoxShape.circle,
         ),
-        child: Image.asset(
-            'assets/icons/barcode-scan.png'), // Replace with your image path
+        child: Image.asset('assets/icons/barcode-scan.png'),
       ),
     );
   }

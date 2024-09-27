@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mivro/presentation/home/provider/product_details_provider.dart';
@@ -50,7 +52,19 @@ class _BarcodeScannerListViewState
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            // Image.asset(imageString, width: 30, height: 30),
+            Image.asset(
+              'assets/food-icons/$imageString.png',
+              width: 30,
+              height: 30,
+              errorBuilder:
+                  (BuildContext context, Object error, StackTrace? stackTrace) {
+                return Image.asset(
+                  'assets/food-icons/no-image.png', // Fallback image when asset is not found
+                  width: 30,
+                  height: 30,
+                );
+              },
+            ),
             const SizedBox(width: 8),
             Text(name, style: const TextStyle(fontSize: 14)),
             const Spacer(),
@@ -70,7 +84,19 @@ class _BarcodeScannerListViewState
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            // Image.asset('assets/icons/$imageString.png', width: 30, height: 30),
+            Image.asset(
+              'assets/food-icons/$imageString.png',
+              width: 30,
+              height: 30,
+              errorBuilder:
+                  (BuildContext context, Object error, StackTrace? stackTrace) {
+                return Image.asset(
+                  'assets/food-icons/no-image.png', // Fallback image when asset is not found
+                  width: 30,
+                  height: 30,
+                );
+              },
+            ),
             const SizedBox(width: 8),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,10 +132,11 @@ class _BarcodeScannerListViewState
           if (barcodes == null || barcodes.isEmpty) {
             return const SizedBox.shrink();
           }
+          // log('${barcodes.first.rawValue}');
 
-          // onDetect(barcodes);
-
-          // var result = ref.read(productDetailsProvider);
+          // String barcode = barcodes.first.rawValue.toString();
+          String barcode = '8901491101813';
+          log(barcode);
 
           controller!.stop();
 
@@ -121,7 +148,7 @@ class _BarcodeScannerListViewState
                 return FutureBuilder<Map<String, dynamic>>(
                   future: ref
                       .read(productDetailsProvider.notifier)
-                      .getProductDetails('5000108022152'),
+                      .getProductDetails(barcode),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return DraggableScrollableSheet(
@@ -194,7 +221,7 @@ class _BarcodeScannerListViewState
                                   Row(
                                     children: [
                                       Image.network(
-                                        result['selected_images']['en'],
+                                        result['selected_images']['en'] ?? '',
                                         width: 60,
                                         height: 60,
                                       ),
@@ -219,14 +246,15 @@ class _BarcodeScannerListViewState
                                             children: [
                                               Icon(Icons.circle,
                                                   color:
-                                                      myColorFromHex('#F8A72C'),
+                                                      myColorFromHex(result[
+                                                          'nutriscore_grade_color']),
                                                   size: 12),
                                               const SizedBox(width: 8),
                                               Text(
                                                   '${result['nutriscore_score']}/100',
                                                   style: TextStyle(
-                                                      color: myColorFromHex(
-                                                          '#F8A72C'))),
+                                                      color: myColorFromHex(result[
+                                                          'nutriscore_grade_color']))),
                                               const SizedBox(width: 8),
                                               Text(
                                                   result['nutriscore_grade']
@@ -235,16 +263,16 @@ class _BarcodeScannerListViewState
                                                   textAlign: TextAlign.right,
                                                   style: TextStyle(
                                                       fontSize: 18,
-                                                      color: myColorFromHex(
-                                                          '#F8A72C'))),
+                                                      color: myColorFromHex(result[
+                                                          'nutriscore_grade_color']))),
                                             ],
                                           ),
                                           Text(
                                               result['nutriscore_assessment'] ??
                                                   'assessment',
                                               style: TextStyle(
-                                                  color: myColorFromHex(
-                                                      '#F8A72C'))),
+                                                  color: myColorFromHex(result[
+                                                      'nutriscore_grade_color']))),
                                         ],
                                       )
                                     ],
@@ -265,32 +293,6 @@ class _BarcodeScannerListViewState
                                       nutrient['color'],
                                       nutrient['name'].toString().toLowerCase(),
                                     ),
-
-                                  // ValueListenableBuilder(
-                                  //   valueListenable: showMoreNegatives,
-                                  //   builder: (context, value, child) {
-                                  //     if (value) {
-                                  //       return Column(
-                                  //       //   children: [
-                                  //       //     _buildNutritionRow(
-                                  //       //         'Saturated Fat',
-                                  //       //         '8.20 g',
-                                  //       //         'Saturated fat alert!',
-                                  //       //         Colors.red,
-                                  //       //         'assets/icons/fatty-acid.png'),
-                                  //       //     _buildNutritionRow(
-                                  //       //         'Salt',
-                                  //       //         '1.03 g',
-                                  //       //         'Salt overload!',
-                                  //       //         Colors.red,
-                                  //       //         'assets/icons/salt.png'),
-                                  //       //     // const SizedBox(height: 20),
-                                  //       //   ],
-                                  //       // );
-                                  //     }
-                                  //     return const SizedBox.shrink();
-                                  //   },
-                                  // ),
                                   StatefulBuilder(builder:
                                       (BuildContext context,
                                           StateSetter setState) {
@@ -310,9 +312,7 @@ class _BarcodeScannerListViewState
                                       ),
                                     );
                                   }),
-
                                   const SizedBox(height: 20),
-
                                   const Text(
                                     'Positives',
                                     style: TextStyle(
@@ -328,55 +328,6 @@ class _BarcodeScannerListViewState
                                       nutrient['color'],
                                       nutrient['name'].toString().toLowerCase(),
                                     ),
-                                  // _buildNutritionRow(
-                                  //     'Fiber',
-                                  //     '2.00 g',
-                                  //     'Fiber-tastic!',
-                                  //     Colors.green,
-                                  //     'assets/icons/fiber.png'),
-                                  // _buildNutritionRow(
-                                  //     'Protein',
-                                  //     '8.20 g',
-                                  //     'Protein power!',
-                                  //     Colors.green,
-                                  //     'assets/icons/protein.png'),
-                                  // ValueListenableBuilder<bool>(
-                                  //   valueListenable: showMorePositives,
-                                  //   builder: (context, value, child) {
-                                  //     if (value) {
-                                  //       return Column(
-                                  //         children: [
-                                  //           _buildNutritionRow(
-                                  //               'Saturated Fat',
-                                  //               '8.20 g',
-                                  //               'Saturated fat alert!',
-                                  //               Colors.red,
-                                  //               'assets/icons/fatty-acid.png'),
-                                  //           _buildNutritionRow(
-                                  //               'Salt',
-                                  //               '1.03 g',
-                                  //               'Salt overload!',
-                                  //               Colors.red,
-                                  //               'assets/icons/salt.png'),
-                                  //           _buildNutritionRow(
-                                  //               'Fiber',
-                                  //               '2.00 g',
-                                  //               'Fiber-tastic!',
-                                  //               Colors.green,
-                                  //               'assets/icons/fiber.png'),
-                                  //           _buildNutritionRow(
-                                  //               'Protein',
-                                  //               '8.20 g',
-                                  //               'Protein power!',
-                                  //               Colors.green,
-                                  //               'assets/icons/protein.png'),
-                                  //           // const SizedBox(height: 20),
-                                  //         ],
-                                  //       );
-                                  //     }
-                                  //     return const SizedBox.shrink();
-                                  //   },
-                                  // ),
                                   StatefulBuilder(builder:
                                       (BuildContext context,
                                           StateSetter setState) {
@@ -410,57 +361,6 @@ class _BarcodeScannerListViewState
                                       ingredient['percentage'],
                                       ingredient['icon'].toLowerCase(),
                                     ),
-                                  // _buildIngredientRow('Wheat Flour', '46.70%',
-                                  //     'assets/icons/wheat-flour.png'),
-                                  // _buildIngredientRow(
-                                  //     'Chocolate Chips',
-                                  //     '23.00%',
-                                  //     'assets/icons/chocolate-chip.png'),
-                                  // _buildIngredientRow('Sugar', '11.80%',
-                                  //     'assets/icons/sugar.png'),
-                                  // ValueListenableBuilder(
-                                  //     valueListenable: showMoreIngredients,
-                                  //     builder: (context, value, child) {
-                                  //       if (value) {
-                                  //         return Column(
-                                  //           children: [
-                                  //             _buildIngredientRow(
-                                  //                 'Cocoa Mass',
-                                  //                 '9.55%',
-                                  //                 'assets/icons/cocoa.png'),
-                                  //             _buildIngredientRow(
-                                  //                 'Cocoa Butter',
-                                  //                 '4.78%',
-                                  //                 'assets/icons/butter.png'),
-                                  //             _buildIngredientRow(
-                                  //                 'Dextrose',
-                                  //                 '2.39%',
-                                  //                 'assets/icons/starch.png'),
-                                  //             _buildIngredientRow(
-                                  //                 'Emulsifier',
-                                  //                 '1.19%',
-                                  //                 'assets/icons/emulsifier.png'),
-                                  //             _buildIngredientRow(
-                                  //                 'Artificial Flavouring Sugar',
-                                  //                 '0.60%',
-                                  //                 'assets/icons/syrup.png'),
-                                  //             _buildIngredientRow(
-                                  //                 'Vegetable Oil Palm Oil',
-                                  //                 '0.30%',
-                                  //                 'assets/icons/palm-oil.png'),
-                                  //             _buildIngredientRow(
-                                  //                 'Glucose-Fructose Syrup',
-                                  //                 '0.15%',
-                                  //                 'assets/icons/glucose.png'),
-                                  //             _buildIngredientRow(
-                                  //                 'Raising Agents',
-                                  //                 '0.07%',
-                                  //                 'assets/icons/additive.png'),
-                                  //           ],
-                                  //         );
-                                  //       }
-                                  //       return const SizedBox.shrink();
-                                  //     }),
                                   StatefulBuilder(builder:
                                       (BuildContext context,
                                           StateSetter setState) {
@@ -480,25 +380,7 @@ class _BarcodeScannerListViewState
                                       ),
                                     );
                                   }),
-                                  // _buildIngredientRow(
-                                  //     'Cocoa Mass', '9.55%', 'assets/icons/cocoa.png'),
-                                  // _buildIngredientRow('Cocoa Butter', '4.78%',
-                                  //     'assets/icons/butter.png'),
-                                  // _buildIngredientRow(
-                                  //     'Dextrose', '2.39%', 'assets/icons/starch.png'),
-                                  // _buildIngredientRow('Emulsifier', '1.19%',
-                                  //     'assets/icons/emulsifier.png'),
-                                  // _buildIngredientRow('Artificial Flavouring Sugar',
-                                  //     '0.60%', 'assets/icons/syrup.png'),
-                                  // _buildIngredientRow('Vegetable Oil Palm Oil', '0.30%',
-                                  //     'assets/icons/palm-oil.png'),
-                                  // _buildIngredientRow('Glucose-Fructose Syrup', '0.15%',
-                                  //     'assets/icons/glucose.png'),
-                                  // _buildIngredientRow('Raising Agents', '0.07%',
-                                  //     'assets/icons/additive.png'),
-
                                   const SizedBox(height: 20),
-                                  // Allergies Section
                                   const Text("Nova Group",
                                       style: TextStyle(
                                           fontSize: 16,
@@ -511,7 +393,7 @@ class _BarcodeScannerListViewState
                                             MainAxisAlignment.start,
                                         children: [
                                           Image.asset(
-                                            'assets/icons/nova-group-${result['nova_group']}.png',
+                                            'assets/food-icons/${result['nova_group']}.png',
                                             height: 30,
                                             width: 30,
                                           ),
@@ -520,13 +402,10 @@ class _BarcodeScannerListViewState
                                         ],
                                       )),
                                   const SizedBox(height: 16),
-
-                                  // Health Risks Section
                                   const Text("Health Risks",
                                       style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold)),
-
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 4.0),
@@ -538,27 +417,27 @@ class _BarcodeScannerListViewState
                                           width: 30,
                                         ),
                                         const SizedBox(width: 8),
-                                        const Expanded(
-                                          child: Text(
-                                            "This product contains E472e (esters of acetic acid and mono- and diglycerides of fatty acids), "
-                                            "which may be derived from palm oil and may be a concern for some individuals.",
-                                          ),
-                                        ),
+                                        Expanded(
+                                            child: Column(
+                                          children: [
+                                            for (var risk
+                                                in result['health_risk']
+                                                    ['ingredient_warnings'])
+                                              Text('• $risk')
+                                          ],
+                                        )),
                                       ],
                                     ),
                                   ),
                                   const SizedBox(height: 16),
-
-                                  // Recommendation Section
                                   const Text("Recommendation",
                                       style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold)),
-
                                   Row(
                                     children: [
                                       Image.network(
-                                        'https://www.bigbasket.com/media/uploads/p/l/40113739_14-maggi-noodles-nutri-licious-masala-oats.jpg',
+                                        result['recommeded_product']['selected_images']['en'],
                                         width: 60,
                                         height: 60,
                                       ),
@@ -567,15 +446,16 @@ class _BarcodeScannerListViewState
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                           Text(
-                                            result['recommeded_product']['product_name']!,
+                                          Text(
+                                            result['recommeded_product']
+                                                ['product_name']!,
                                             style: const TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold),
                                           ),
-                                          const Text(
-                                            'Nestle',
-                                            style: TextStyle(
+                                           Text(
+                                            result['recommeded_product']['brands'],
+                                            style: const TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.grey),
                                           ),
@@ -583,26 +463,26 @@ class _BarcodeScannerListViewState
                                             children: [
                                               Icon(Icons.circle,
                                                   color:
-                                                      myColorFromHex('#FFD65A'),
+                                                      myColorFromHex(result['recommeded_product']['nutriscore_grade_color']),
                                                   size: 12),
                                               const SizedBox(width: 8),
-                                              Text('27/100',
+                                              Text('${result['recommeded_product']['nutriscore_score']}/100',
                                                   style: TextStyle(
                                                       color: myColorFromHex(
-                                                          '#FFD65A'))),
+                                                          result['recommeded_product']['nutriscore_grade_color']))),
                                               const SizedBox(width: 8),
-                                              Text('C',
+                                              Text(result['recommeded_product']['nutriscore_grade'].toString().toUpperCase(),
                                                   textAlign: TextAlign.right,
                                                   style: TextStyle(
                                                       fontSize: 18,
                                                       color: myColorFromHex(
-                                                          '#FFD65A'))),
+                                                          result['recommeded_product']['nutriscore_grade_color']))),
                                             ],
                                           ),
-                                          Text('Poor',
+                                          Text(result['recommeded_product']['nutriscore_assessment'],
                                               style: TextStyle(
                                                   color: myColorFromHex(
-                                                      '#FFD65A'))),
+                                                      result['recommeded_product']['nutriscore_grade_color']))),
                                         ],
                                       )
                                     ],
@@ -643,8 +523,6 @@ class _BarcodeScannerListViewState
             150,
           ),
           errorBuilder: (context, error, child) {
-            // controller!.stop();
-            // controller!.start();
             return ScannerErrorWidget(error: error);
           },
           fit: BoxFit.cover,
@@ -662,8 +540,7 @@ class _BarcodeScannerListViewState
                     ),
                   ),
                   child: Container(
-                    color: Colors.black
-                        .withOpacity(0.5), // Semi-transparent overlay
+                    color: Colors.black.withOpacity(0.5),
                   ),
                 ),
                 Center(
@@ -672,20 +549,14 @@ class _BarcodeScannerListViewState
                     width: 400,
                     decoration: BoxDecoration(
                       border: Border.all(
-                        color: const Color.fromARGB(
-                            255, 172, 49, 40), // Red border
+                        color: const Color.fromARGB(255, 172, 49, 40),
                         width: 2,
                       ),
-                      // borderRadius: BorderRadius.circular(8),
                     ),
                     child: Lottie.asset(
                       'assets/animations/scanner.json',
                       fit: BoxFit.fill,
                     ),
-                    // child: const ScanningAnimation(
-                    //   width: 400,
-                    //   height: 150,
-                    // ),
                   ),
                 ),
               ],
@@ -693,11 +564,7 @@ class _BarcodeScannerListViewState
           },
         ),
         const Positioned(
-          top: 10,
-          left: 10,
-          right: 10,
-          child: SearchBarWIdget(),
-        ),
+            top: 10, left: 10, right: 10, child: SearchBarWidget()),
         Positioned(
           top: 150,
           right: 10,
@@ -706,7 +573,7 @@ class _BarcodeScannerListViewState
             children: [
               ToggleFlashlightButton(controller: controller!),
               const Text(
-                'Flashlight',
+                'Flash',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 12,

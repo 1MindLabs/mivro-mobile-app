@@ -97,9 +97,10 @@ flutter:
   assets:
     - assets/
     - assets/app-icons/
-    - assets/icons/
     - assets/logos/
     - assets/animations/
+    - assets/food-icons/
+    - assets/icons/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

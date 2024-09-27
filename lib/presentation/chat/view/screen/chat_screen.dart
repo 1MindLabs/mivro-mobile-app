@@ -211,7 +211,7 @@ class _ChatbotScreenState extends ConsumerState<ChatbotScreen> {
                       Expanded(
                         child: TextFormField(
                           decoration: InputDecoration(
-                              hintText: 'Start your conversation here...',
+                              hintText: 'Message...',
                               labelStyle: TextStyle(color: Colors.grey),
                               filled: true,
                               fillColor: myColorFromHex('#EEF1FF'),
