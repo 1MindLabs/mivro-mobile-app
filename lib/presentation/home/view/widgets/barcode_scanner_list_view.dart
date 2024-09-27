@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:math';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
@@ -123,6 +124,413 @@ class _BarcodeScannerListViewState
       );
     }
 
+    Widget details(Map<String, dynamic> result) {
+      return DraggableScrollableSheet(
+        expand: false,
+        builder: (context, scrollController) {
+          return Container(
+            padding:
+                const EdgeInsets.only(top: 5, left: 16, right: 16, bottom: 16),
+            color: Colors.white,
+            child: SingleChildScrollView(
+              controller: scrollController,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Spacer(),
+                      IconButton(
+                        icon: const Icon(Icons.flag_outlined),
+                        iconSize: 20,
+                        onPressed: () {},
+                      ),
+                      StatefulBuilder(
+                        builder: (BuildContext context, StateSetter setState) {
+                          return IconButton(
+                            icon: favorite,
+                            iconSize: 20,
+                            onPressed: () {
+                              setState(() {
+                                favorite = Icon(
+                                  favorite.icon == Icons.favorite
+                                      ? Icons.favorite_border
+                                      : Icons.favorite,
+                                  color: favorite.icon == Icons.favorite
+                                      ? Colors.black
+                                      : Colors.red,
+                                );
+                              });
+                            },
+                          );
+                        },
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.ios_share_rounded),
+                        iconSize: 20,
+                        onPressed: () {},
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        iconSize: 20,
+                        onPressed: () {
+                          Navigator.pop(context);
+                          controller!.start();
+                        },
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Image.network(
+                        result['selected_images']['en'] ?? '',
+                        width: 60,
+                        height: 60,
+                      ),
+                      const SizedBox(width: 16),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            result['product_name'] ?? 'name',
+                            style: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            result['brands'] ?? 'brand',
+                            style: const TextStyle(
+                                fontSize: 14, color: Colors.grey),
+                          ),
+                          Row(
+                            children: [
+                              Icon(Icons.circle,
+                                  color: myColorFromHex(
+                                      result['nutriscore_grade_color']),
+                                  size: 12),
+                              const SizedBox(width: 8),
+                              Text('${result['nutriscore_score']}/100',
+                                  style: TextStyle(
+                                      color: myColorFromHex(
+                                          result['nutriscore_grade_color']))),
+                              const SizedBox(width: 8),
+                              Text(
+                                  result['nutriscore_grade']
+                                      .toString()
+                                      .toUpperCase(),
+                                  textAlign: TextAlign.right,
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      color: myColorFromHex(
+                                          result['nutriscore_grade_color']))),
+                            ],
+                          ),
+                          Text(result['nutriscore_assessment'] ?? 'assessment',
+                              style: TextStyle(
+                                  color: myColorFromHex(
+                                      result['nutriscore_grade_color']))),
+                        ],
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Negatives',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  ValueListenableBuilder(
+                    valueListenable: showMoreNegatives,
+                    builder: (context, value, child) {
+                      final positiveNutrients =
+                          result['nutriments']['negative_nutrient'];
+                      final nutrientsCount = positiveNutrients.length;
+
+                      return Column(
+                        children: [
+                          // Show either all items or up to 3 items
+                          for (var i = 0;
+                              i <
+                                  (value
+                                      ? nutrientsCount
+                                      : min(3, nutrientsCount));
+                              i++)
+                            _buildNutritionRow(
+                              positiveNutrients[i]['name'],
+                              positiveNutrients[i]['quantity'],
+                              positiveNutrients[i]['text'],
+                              positiveNutrients[i]['color'],
+                              positiveNutrients[i]['name']
+                                  .toString()
+                                  .toLowerCase(),
+                            ),
+
+                          // Conditionally display the button if there are more than 3 items
+                          if (nutrientsCount > 3)
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: TextButton(
+                                onPressed: () {
+                                  showMoreNegatives.value =
+                                      !showMoreNegatives.value;
+                                },
+                                child: Text(
+                                  showMoreNegatives.value
+                                      ? 'Show Less'
+                                      : 'Show More',
+                                  style: const TextStyle(color: Colors.blue),
+                                ),
+                              ),
+                            ),
+                        ],
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Positives',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  ValueListenableBuilder(
+                    valueListenable: showMorePositives,
+                    builder: (context, value, child) {
+                      final positiveNutrients =
+                          result['nutriments']['positive_nutrient'];
+                      final nutrientsCount = positiveNutrients.length;
+
+                      return Column(
+                        children: [
+                          // Show either all items or up to 3 items
+                          for (var i = 0;
+                              i <
+                                  (value
+                                      ? nutrientsCount
+                                      : min(3, nutrientsCount));
+                              i++)
+                            _buildNutritionRow(
+                              positiveNutrients[i]['name'],
+                              positiveNutrients[i]['quantity'],
+                              positiveNutrients[i]['text'],
+                              positiveNutrients[i]['color'],
+                              positiveNutrients[i]['name']
+                                  .toString()
+                                  .toLowerCase(),
+                            ),
+
+                          // Conditionally display the button if there are more than 3 items
+                          if (nutrientsCount > 3)
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: TextButton(
+                                onPressed: () {
+                                  showMorePositives.value =
+                                      !showMorePositives.value;
+                                },
+                                child: Text(
+                                  showMorePositives.value
+                                      ? 'Show Less'
+                                      : 'Show More',
+                                  style: const TextStyle(color: Colors.blue),
+                                ),
+                              ),
+                            ),
+                        ],
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Ingredients',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 10),
+                  ValueListenableBuilder(
+                    valueListenable: showMoreIngredients,
+                    builder: (context, value, child) {
+                      final ingredients = result['ingredients'];
+                      final ingredientsCount = ingredients.length;
+
+                      return Column(
+                        children: [
+                          // Show the first 3 items or all items based on 'showMoreIngredients'
+                          for (var i = 0;
+                              i <
+                                  (value
+                                      ? ingredientsCount
+                                      : min(3, ingredientsCount));
+                              i++)
+                            _buildIngredientRow(
+                              ingredients[i]['name'],
+                              ingredients[i]['percentage'],
+                              ingredients[i]['icon'].toLowerCase(),
+                            ),
+
+                          // Conditionally display the button only if there are more than 3 ingredients
+                          if (ingredientsCount > 3)
+                            TextButton(
+                              onPressed: () {
+                                showMoreIngredients.value =
+                                    !showMoreIngredients.value;
+                              },
+                              child: Text(
+                                value ? 'Show Less' : 'Show More',
+                                style: const TextStyle(color: Colors.blue),
+                              ),
+                            ),
+                        ],
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  const Text("Nova Group",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Image.asset(
+                            'assets/food-icons/${result['nova_group']}.png',
+                            height: 30,
+                            width: 30,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(result['nova_group_name']!),
+                        ],
+                      )),
+                  const SizedBox(height: 16),
+                  const Text("Health Risks",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4.0),
+                    child: Row(
+                      children: [
+                        Image.asset(
+                          'assets/icons/health-risk.png',
+                          height: 30,
+                          width: 30,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Column(
+                            children: [
+                              for (var risk in result['health_risk']
+                                  ['ingredient_warnings'])
+                                Text('• $risk')
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text("Recommendation",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  GestureDetector(
+                    onTap: () {
+                      print(result['recommeded_product']['brands'].toString());
+                      if (result['recommeded_product']['brands'] != null) {
+                        Navigator.pop(context);
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return details(result['recommeded_product']);
+                          },
+                        );
+                      }
+                    },
+                    child: result['recommeded_product']['brands'] != null
+                        ? Row(
+                            children: [
+                              Image.network(
+                                result['recommeded_product']['selected_images']
+                                    ['en'],
+                                width: 60,
+                                height: 60,
+                              ),
+                              const SizedBox(width: 16),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    result['recommeded_product']
+                                        ['product_name']!,
+                                    style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    result['recommeded_product']['brands'],
+                                    style: const TextStyle(
+                                        fontSize: 14, color: Colors.grey),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Icon(Icons.circle,
+                                          color: myColorFromHex(
+                                              result['recommeded_product']
+                                                  ['nutriscore_grade_color']),
+                                          size: 12),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        '${result['recommeded_product']['nutriscore_score']}/100',
+                                        style: TextStyle(
+                                            color: myColorFromHex(result[
+                                                    'recommeded_product']
+                                                ['nutriscore_grade_color'])),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        result['recommeded_product']
+                                                ['nutriscore_grade']
+                                            .toString()
+                                            .toUpperCase(),
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            color: myColorFromHex(result[
+                                                    'recommeded_product']
+                                                ['nutriscore_grade_color'])),
+                                      ),
+                                    ],
+                                  ),
+                                  Text(
+                                    result['recommeded_product']
+                                        ['nutriscore_assessment'],
+                                    style: TextStyle(
+                                        color: myColorFromHex(
+                                            result['recommeded_product']
+                                                ['nutriscore_grade_color'])),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          )
+                        : Row(
+                            children: [
+                              Image.asset(
+                                'assets/app-icons/no-database.png',
+                                width: 30,
+                                height: 30,
+                              ),
+                              const SizedBox(width: 16),
+                              Text(
+                                result['recommeded_product']['product_name']!,
+                                style: const TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                  )
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    }
+
     Widget _buildBarcodesListView() {
       return StreamBuilder<BarcodeCapture>(
         stream: controller!.barcodes,
@@ -136,7 +544,7 @@ class _BarcodeScannerListViewState
 
           // String barcode = barcodes.first.rawValue.toString();
           String barcode = '8901491101813';
-          log(barcode);
+          print(barcode);
 
           controller!.stop();
 
@@ -154,345 +562,12 @@ class _BarcodeScannerListViewState
                       return DraggableScrollableSheet(
                           expand: false,
                           builder: (context, scrollController) =>
-                              Center(child: CircularProgressIndicator()));
+                              const Center(child: CircularProgressIndicator()));
                     } else if (snapshot.hasError) {
                       return Center(child: Text('Error: ${snapshot.error}'));
                     } else if (snapshot.hasData) {
                       var result = snapshot.data!;
-                      return DraggableScrollableSheet(
-                        expand: false,
-                        builder: (context, scrollController) {
-                          return Container(
-                            padding: const EdgeInsets.only(
-                                top: 5, left: 16, right: 16, bottom: 16),
-                            color: Colors.white,
-                            child: SingleChildScrollView(
-                              controller: scrollController,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      const Spacer(),
-                                      IconButton(
-                                        icon: const Icon(Icons.flag_outlined),
-                                        iconSize: 20,
-                                        onPressed: () {},
-                                      ),
-                                      StatefulBuilder(
-                                        builder: (BuildContext context,
-                                            StateSetter setState) {
-                                          return IconButton(
-                                            icon: favorite,
-                                            iconSize: 20,
-                                            onPressed: () {
-                                              setState(() {
-                                                favorite = Icon(
-                                                  favorite.icon ==
-                                                          Icons.favorite
-                                                      ? Icons.favorite_border
-                                                      : Icons.favorite,
-                                                  color: favorite.icon ==
-                                                          Icons.favorite
-                                                      ? Colors.black
-                                                      : Colors.red,
-                                                );
-                                              });
-                                            },
-                                          );
-                                        },
-                                      ),
-                                      IconButton(
-                                        icon:
-                                            const Icon(Icons.ios_share_rounded),
-                                        iconSize: 20,
-                                        onPressed: () {},
-                                      ),
-                                      IconButton(
-                                        icon: const Icon(Icons.close),
-                                        iconSize: 20,
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                          controller!.start();
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Image.network(
-                                        result['selected_images']['en'] ?? '',
-                                        width: 60,
-                                        height: 60,
-                                      ),
-                                      const SizedBox(width: 16),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            result['product_name'] ?? 'name',
-                                            style: const TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(
-                                            result['brands'] ?? 'brand',
-                                            style: const TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.grey),
-                                          ),
-                                          Row(
-                                            children: [
-                                              Icon(Icons.circle,
-                                                  color:
-                                                      myColorFromHex(result[
-                                                          'nutriscore_grade_color']),
-                                                  size: 12),
-                                              const SizedBox(width: 8),
-                                              Text(
-                                                  '${result['nutriscore_score']}/100',
-                                                  style: TextStyle(
-                                                      color: myColorFromHex(result[
-                                                          'nutriscore_grade_color']))),
-                                              const SizedBox(width: 8),
-                                              Text(
-                                                  result['nutriscore_grade']
-                                                      .toString()
-                                                      .toUpperCase(),
-                                                  textAlign: TextAlign.right,
-                                                  style: TextStyle(
-                                                      fontSize: 18,
-                                                      color: myColorFromHex(result[
-                                                          'nutriscore_grade_color']))),
-                                            ],
-                                          ),
-                                          Text(
-                                              result['nutriscore_assessment'] ??
-                                                  'assessment',
-                                              style: TextStyle(
-                                                  color: myColorFromHex(result[
-                                                      'nutriscore_grade_color']))),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                  const SizedBox(height: 20),
-                                  const Text(
-                                    'Negatives',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  for (var nutrient in result['nutriments']
-                                      ['negative_nutrient'])
-                                    _buildNutritionRow(
-                                      nutrient['name'],
-                                      nutrient['quantity'],
-                                      nutrient['text'],
-                                      nutrient['color'],
-                                      nutrient['name'].toString().toLowerCase(),
-                                    ),
-                                  StatefulBuilder(builder:
-                                      (BuildContext context,
-                                          StateSetter setState) {
-                                    return TextButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          showMoreNegatives.value =
-                                              !showMoreNegatives.value;
-                                        });
-                                      },
-                                      child: Text(
-                                        showMoreNegatives.value
-                                            ? 'Show Less'
-                                            : 'Show More',
-                                        style:
-                                            const TextStyle(color: Colors.blue),
-                                      ),
-                                    );
-                                  }),
-                                  const SizedBox(height: 20),
-                                  const Text(
-                                    'Positives',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  for (var nutrient in result['nutriments']
-                                      ['positive_nutrient'])
-                                    _buildNutritionRow(
-                                      nutrient['name'],
-                                      nutrient['quantity'],
-                                      nutrient['text'],
-                                      nutrient['color'],
-                                      nutrient['name'].toString().toLowerCase(),
-                                    ),
-                                  StatefulBuilder(builder:
-                                      (BuildContext context,
-                                          StateSetter setState) {
-                                    return TextButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          showMorePositives.value =
-                                              !showMorePositives.value;
-                                        });
-                                      },
-                                      child: Text(
-                                        showMorePositives.value
-                                            ? 'Show Less'
-                                            : 'Show More',
-                                        style:
-                                            const TextStyle(color: Colors.blue),
-                                      ),
-                                    );
-                                  }),
-                                  const SizedBox(height: 20),
-                                  const Text(
-                                    'Ingredients',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  for (var ingredient in result['ingredients'])
-                                    _buildIngredientRow(
-                                      ingredient['name'],
-                                      ingredient['percentage'],
-                                      ingredient['icon'].toLowerCase(),
-                                    ),
-                                  StatefulBuilder(builder:
-                                      (BuildContext context,
-                                          StateSetter setState) {
-                                    return TextButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          showMoreIngredients.value =
-                                              !showMoreIngredients.value;
-                                        });
-                                      },
-                                      child: Text(
-                                        showMoreIngredients.value
-                                            ? 'Show Less'
-                                            : 'Show More',
-                                        style:
-                                            const TextStyle(color: Colors.blue),
-                                      ),
-                                    );
-                                  }),
-                                  const SizedBox(height: 20),
-                                  const Text("Nova Group",
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold)),
-                                  Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 4.0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Image.asset(
-                                            'assets/food-icons/${result['nova_group']}.png',
-                                            height: 30,
-                                            width: 30,
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Text(result['nova_group_name']!),
-                                        ],
-                                      )),
-                                  const SizedBox(height: 16),
-                                  const Text("Health Risks",
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold)),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 4.0),
-                                    child: Row(
-                                      children: [
-                                        Image.asset(
-                                          'assets/icons/health-risk.png',
-                                          height: 30,
-                                          width: 30,
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Expanded(
-                                            child: Column(
-                                          children: [
-                                            for (var risk
-                                                in result['health_risk']
-                                                    ['ingredient_warnings'])
-                                              Text('• $risk')
-                                          ],
-                                        )),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(height: 16),
-                                  const Text("Recommendation",
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold)),
-                                  Row(
-                                    children: [
-                                      Image.network(
-                                        result['recommeded_product']['selected_images']['en'],
-                                        width: 60,
-                                        height: 60,
-                                      ),
-                                      const SizedBox(width: 16),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            result['recommeded_product']
-                                                ['product_name']!,
-                                            style: const TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                           Text(
-                                            result['recommeded_product']['brands'],
-                                            style: const TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.grey),
-                                          ),
-                                          Row(
-                                            children: [
-                                              Icon(Icons.circle,
-                                                  color:
-                                                      myColorFromHex(result['recommeded_product']['nutriscore_grade_color']),
-                                                  size: 12),
-                                              const SizedBox(width: 8),
-                                              Text('${result['recommeded_product']['nutriscore_score']}/100',
-                                                  style: TextStyle(
-                                                      color: myColorFromHex(
-                                                          result['recommeded_product']['nutriscore_grade_color']))),
-                                              const SizedBox(width: 8),
-                                              Text(result['recommeded_product']['nutriscore_grade'].toString().toUpperCase(),
-                                                  textAlign: TextAlign.right,
-                                                  style: TextStyle(
-                                                      fontSize: 18,
-                                                      color: myColorFromHex(
-                                                          result['recommeded_product']['nutriscore_grade_color']))),
-                                            ],
-                                          ),
-                                          Text(result['recommeded_product']['nutriscore_assessment'],
-                                              style: TextStyle(
-                                                  color: myColorFromHex(
-                                                      result['recommeded_product']['nutriscore_grade_color']))),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      );
+                      return details(result);
                     } else {
                       return const Center(
                         child: Text('No product details found.'),

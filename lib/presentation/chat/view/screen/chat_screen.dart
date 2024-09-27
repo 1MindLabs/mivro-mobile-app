@@ -212,7 +212,7 @@ class _ChatbotScreenState extends ConsumerState<ChatbotScreen> {
                         child: TextFormField(
                           decoration: InputDecoration(
                               hintText: 'Message...',
-                              labelStyle: TextStyle(color: Colors.grey),
+                              labelStyle: const TextStyle(color: Colors.grey),
                               filled: true,
                               fillColor: myColorFromHex('#EEF1FF'),
                               border: InputBorder.none),

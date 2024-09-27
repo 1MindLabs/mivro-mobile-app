@@ -28,7 +28,6 @@ class ProductDetailsNotifier extends StateNotifier<Map<String, dynamic>> {
         final Map<String, dynamic> data =
             json.decode(response.body) as Map<String, dynamic>;
         log(data.toString());
-        // clearProductDetails();
         state = data;
 
         return data;
