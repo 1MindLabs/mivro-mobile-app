@@ -124,6 +124,165 @@ class _BarcodeScannerListViewState
       );
     }
 
+    Widget devDetails(Map<String, dynamic> result) {
+      return DraggableScrollableSheet(
+        expand: false,
+        builder: (context, scrollController) {
+          return Container(
+            padding:
+                const EdgeInsets.only(top: 5, left: 16, right: 16, bottom: 16),
+            color: Colors.white,
+            child: SingleChildScrollView(
+              controller: scrollController,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Spacer(),
+                      
+                      
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        iconSize: 20,
+                        onPressed: () {
+                          Navigator.pop(context);
+                          controller!.start();
+                        },
+                      ),
+                    ],
+                  ),
+                  
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Powered by OpenFoodFacts + Google Gemini
+                      RichText(
+                        text: TextSpan(
+                          text: 'Powered by ',
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black), // default text style
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: 'OpenFoodFacts',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black),
+                            ),
+                            TextSpan(text: ' + '),
+                            TextSpan(
+                              text: 'Google Gemini',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      SizedBox(height: 20), // Space between sections
+
+                      // Search Section
+                      Text(
+                        'App\n',
+                        style: TextStyle(
+                            fontSize: 22,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        '• Search Type: ${result['search_type']}',
+                        style: TextStyle(fontSize: 16, color: Colors.black),
+                      ),
+                      Text(
+                        '• Search Response: ${result['search_response']}',
+                        style: TextStyle(fontSize: 16, color: Colors.black),
+                      ),
+                      Text(
+                        '• Response Time: ${result['response_time']}',
+                        style: TextStyle(fontSize: 16, color: Colors.black),
+                      ),
+                      Text(
+                        '• Response Size: ${result['response_size']}',
+                        style: TextStyle(fontSize: 16, color: Colors.black),
+                      ),
+                      Text(
+                        '• Search Date: ${result['search_date']}',
+                        style: TextStyle(fontSize: 16, color: Colors.black),
+                      ),
+                      Text(
+                        '• Search Time: ${result['search_time']}',
+                        style: TextStyle(fontSize: 16, color: Colors.black),
+                      ),
+
+                      SizedBox(height: 20), // Space between sections
+
+                      // Product Section
+                      const Text(
+                        'Product\n',
+                        style: TextStyle(
+                            fontSize: 22,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        '• ID: ${result['_id']}',
+                        style: TextStyle(fontSize: 16, color: Colors.black),
+                      ),
+                      Text(
+                        '• Total Nutrients: ${result['total_nutriments']}',
+                        style: TextStyle(fontSize: 16, color: Colors.black),
+                      ),
+                      Text(
+                        '• Total Ingredients: ${result['ingredients_n']}',
+                        style: TextStyle(fontSize: 16, color: Colors.black),
+                      ),
+                      Text(
+                        '• Total Additives: ${result['additives_n']}',
+                        style: TextStyle(fontSize: 16, color: Colors.black),
+                      ),
+                      Text(
+                        '• Total Health Risks: ${result['total_health_risks']}',
+                        style: TextStyle(fontSize: 16, color: Colors.black),
+                      ),
+
+                      SizedBox(height: 20), // Space between sections
+
+                      // Warning Section
+                      Text(
+                        'Warning\n',
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        'The information provided is for general guidance only and should not be considered medical advice. Always seek professional advice for important health decisions.',
+                        style: TextStyle(fontSize: 14, color: Colors.black),
+                      ),
+
+                      SizedBox(height: 20), // Space between sections
+
+                      // Footer
+                      Text(
+                        '© 2024 Areeb Ahmed, Shivansh Karan, Shashwat Kumar, Rishi Chirchi. All rights reserved.',
+                        style: TextStyle(fontSize: 12, color: Colors.black),
+                      ),
+                      Text(
+                        'License - Documentation',
+                        style: TextStyle(fontSize: 12, color: Colors.black),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    }
+
     Widget details(Map<String, dynamic> result) {
       return DraggableScrollableSheet(
         expand: false,
@@ -180,57 +339,66 @@ class _BarcodeScannerListViewState
                       ),
                     ],
                   ),
-                  Row(
-                    children: [
-                      Image.network(
-                        result['selected_images']['en'] ?? '',
-                        width: 60,
-                        height: 60,
+                  GestureDetector(
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => devDetails(result),
                       ),
-                      const SizedBox(width: 16),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            result['product_name'] ?? 'name',
-                            style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            result['brands'] ?? 'brand',
-                            style: const TextStyle(
-                                fontSize: 14, color: Colors.grey),
-                          ),
-                          Row(
-                            children: [
-                              Icon(Icons.circle,
-                                  color: myColorFromHex(
-                                      result['nutriscore_grade_color']),
-                                  size: 12),
-                              const SizedBox(width: 8),
-                              Text('${result['nutriscore_score']}/100',
-                                  style: TextStyle(
-                                      color: myColorFromHex(
-                                          result['nutriscore_grade_color']))),
-                              const SizedBox(width: 8),
-                              Text(
-                                  result['nutriscore_grade']
-                                      .toString()
-                                      .toUpperCase(),
-                                  textAlign: TextAlign.right,
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      color: myColorFromHex(
-                                          result['nutriscore_grade_color']))),
-                            ],
-                          ),
-                          Text(result['nutriscore_assessment'] ?? 'assessment',
-                              style: TextStyle(
-                                  color: myColorFromHex(
-                                      result['nutriscore_grade_color']))),
-                        ],
-                      )
-                    ],
+                    ),
+                    child: Row(
+                      children: [
+                        Image.network(
+                          result['selected_images']['en'] ?? '',
+                          width: 60,
+                          height: 60,
+                        ),
+                        const SizedBox(width: 16),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              result['product_name'] ?? 'name',
+                              style: const TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              result['brands'] ?? 'brand',
+                              style: const TextStyle(
+                                  fontSize: 14, color: Colors.grey),
+                            ),
+                            Row(
+                              children: [
+                                Icon(Icons.circle,
+                                    color: myColorFromHex(
+                                        result['nutriscore_grade_color']),
+                                    size: 12),
+                                const SizedBox(width: 8),
+                                Text('${result['nutriscore_score']}/100',
+                                    style: TextStyle(
+                                        color: myColorFromHex(
+                                            result['nutriscore_grade_color']))),
+                                const SizedBox(width: 8),
+                                Text(
+                                    result['nutriscore_grade']
+                                        .toString()
+                                        .toUpperCase(),
+                                    textAlign: TextAlign.right,
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        color: myColorFromHex(
+                                            result['nutriscore_grade_color']))),
+                              ],
+                            ),
+                            Text(
+                                result['nutriscore_assessment'] ?? 'assessment',
+                                style: TextStyle(
+                                    color: myColorFromHex(
+                                        result['nutriscore_grade_color']))),
+                          ],
+                        )
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 20),
                   const Text(
@@ -542,8 +710,8 @@ class _BarcodeScannerListViewState
           }
           // log('${barcodes.first.rawValue}');
 
-          // String barcode = barcodes.first.rawValue.toString();
-          String barcode = '8901491101813';
+          String barcode = barcodes.first.rawValue.toString();
+          // String barcode = '8901491101813';
           print(barcode);
 
           controller!.stop();

@@ -54,22 +54,23 @@ dependencies:
   lottie: ^3.1.2
   file_picker: ^8.1.2
   speech_to_text: ^7.0.0
+  shared_preferences: ^2.3.2
 
-flutter_native_splash:
-  color: "#27374D" # Background color of the splash screen
-  image: assets/images/logo-transparent.png # Path to your splash screen image
-  android: true # Enable splash screen for Android
-  ios: true # Enable splash screen for iOS
-  android_gravity: center # Center the splash image for Android
-  ios_content_mode: center # Center the splash image for iOS
+# flutter_native_splash:
+#   color: "#27374D" # Background color of the splash screen
+#   image: assets/images/logo-transparent.png # Path to your splash screen image
+#   android: true # Enable splash screen for Android
+#   ios: true # Enable splash screen for iOS
+#   android_gravity: center # Center the splash image for Android
+#   ios_content_mode: center # Center the splash image for iOS
 
-  android_12:
-    color: "#27374D" # Background color of the splash screen
-    image: assets/images/logo-transparent.png # Path to your splash screen image
-    android: true # Enable splash screen for Android
-    ios: true # Enable splash screen for iOS
-    android_gravity: center # Center the splash image for Android
-    ios_content_mode: center # Center the splash image for iOS
+#   android_12:
+#     color: "#27374D" # Background color of the splash screen
+#     image: assets/images/logo-transparent.png # Path to your splash screen image
+#     android: true # Enable splash screen for Android
+#     ios: true # Enable splash screen for iOS
+#     android_gravity: center # Center the splash image for Android
+#     ios_content_mode: center # Center the splash image for iOS
 
 dev_dependencies:
   flutter_test:
